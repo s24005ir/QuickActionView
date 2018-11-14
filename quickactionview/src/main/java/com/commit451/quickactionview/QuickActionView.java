@@ -1,5 +1,6 @@
 package com.commit451.quickactionview;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -125,7 +126,7 @@ public class QuickActionView {
         RegisteredListener listener = new RegisteredListener();
         mRegisteredListeners.put(view, listener);
         view.setOnTouchListener(listener);
-        view.setOnLongClickListener(listener);
+        view.setOnClickListener(listener);
         return this;
     }
 
@@ -171,7 +172,7 @@ public class QuickActionView {
      * @return the QuickActionView
      */
     public QuickActionView addActions(@MenuRes int menuId) {
-        Menu menu = new MenuBuilder(mContext);
+        @SuppressLint("RestrictedApi") Menu menu = new MenuBuilder(mContext);
         new MenuInflater(mContext).inflate(menuId, menu);
         for (int i = 0; i < menu.size(); i++) {
             MenuItem item = menu.getItem(i);
@@ -950,16 +951,16 @@ public class QuickActionView {
     /**
      * A class to combine a long click listener and a touch listener, to register views with
      */
-    private class RegisteredListener implements View.OnLongClickListener, View.OnTouchListener {
+    private class RegisteredListener implements View.OnClickListener, View.OnTouchListener {
 
         private float mTouchX;
         private float mTouchY;
 
-        @Override
-        public boolean onLongClick(View v) {
-            show(v, new Point((int) mTouchX, (int) mTouchY));
-            return false;
-        }
+//        @Override
+//        public  onClick(View v) {
+//            show(v, new Point((int) mTouchX, (int) mTouchY));
+//            return false;
+//        }
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
@@ -969,6 +970,11 @@ public class QuickActionView {
                 mQuickActionViewLayout.onTouchEvent(event);
             }
             return mShown;
+        }
+
+        @Override
+        public void onClick(View v) {
+            show(v,new Point((int) mTouchX,(int) mTouchY));
         }
     }
 }
